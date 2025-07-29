@@ -1,0 +1,49 @@
+<!-- todo/templates/todo/task_list.html -->
+{% extends 'todo/base.html' %}
+
+{% block content %}
+<h2>Welcome, {{ user.username }}!</h2>
+
+<!-- Add Task Form -->
+<h3>Add a New Task</h3>
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="title" placeholder="Task title" required>
+    <textarea name="description" placeholder="Description (optional)"></textarea>
+    <br>
+    <label for="due_date">Due date:</label>
+    <input type="date" name="due_date">
+    <label for="priority">Priority:</label>
+    <select name="priority">
+        <option value="L">Low</option>
+        <option value="M" selected>Medium</option>
+        <option value="H">High</option>
+    </select>
+    <br><br>
+    <button type="submit">Add Task</button>
+</form>
+
+<hr>
+
+<!-- Task List -->
+<h3>Your Tasks</h3>
+<ul>
+    {% for task in tasks %}
+        <li>
+            <strong>{{ task.title }}</strong> -
+            {% if task.is_completed %}
+                ✅ <em>(Completed)</em>
+            {% else %}
+                ❌ <em>(Pending)</em>
+            {% endif %}
+            <br>
+            <small>Due: {{ task.due_date }} | Priority: {{ task.get_priority_display }}</small>
+            <br>
+            <small>{{ task.description }}</small>
+        </li>
+        <hr>
+    {% empty %}
+        <li>No tasks yet. Start by adding one!</li>
+    {% endfor %}
+</ul>
+{% endblock %}
